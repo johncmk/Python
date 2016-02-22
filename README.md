@@ -1,8 +1,8 @@
 >#Algorithms
->>Divide and conquery
+>>Divide and conquer
 
 >>Dynamic Programming
 
->>Heap, DataStreams SimpleDijkstra
+>>Heap, DataStreams Simple Dijkstra
 
 >>Graph
