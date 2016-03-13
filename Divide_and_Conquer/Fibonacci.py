@@ -5,4 +5,5 @@ def fib(n):
         return 1
     return fib(n-2) + fib(n-1)
 
-print fib(20)
+if __name__ == "__main__":
+    print fib_rec(23)

@@ -5,14 +5,20 @@ Quick Sort
 
 import random
 
-def qSort(li):
+def qsort(li):
     if li == []:
-        return []
-    pAdrs = random.randint(0,len(li)-1)
-    pivot = li.pop(pAdrs)
-    l = [x for x in li if x <= pivot]
-    r = [y for y in li if y > pivot]
-    return qSort(l) + [pivot] + qSort(r)
+        return li
+    pivot = random.choice(li)
+    l,eq,r = [],[],[]
+    for el in li:
+        if el < pivot:
+            l.append(el)
+        elif el > pivot:
+            r.append(el)
+        else:
+            eq.append(el)
+    return qsort(l) + eq + qsort(r)
 
-li = [3,4,5,2,10,1,0,2]
-print qSort(li)
+if __name__ == "__main__":
+    li = [5,1,2,4,3,3,5,1,2,4,3]
+    print qsort(li)

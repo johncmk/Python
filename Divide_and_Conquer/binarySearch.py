@@ -11,8 +11,10 @@ def bsearch(k,li):
     if k > li[m]:
         return bsearch(k,li[m:])
         
-li = [-1, 5, 6, 18, 19, 25, 46, 78, 102, 114]
-k = 103
-
-print(bsearch(k,li))
+        
+if __name__ == "__main__":        
+    li = [-1, 5, 6, 18, 19, 25, 46, 78, 102, 114]
+    k = 103
+    
+    print(bsearch(k,li))
 

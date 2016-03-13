@@ -1,14 +1,14 @@
 inversion = 0
 
-def foo(li):
+def inv(li):
     if len(li) <= 1:
         return li
     mid = len(li)/2
     l,r = [],[]
     for i,el in enumerate(li):
         l.append(el) if(i < mid) else r.append(el)
-    left = foo(l)
-    right = foo(r)
+    left = inv(l)
+    right = inv(r)
     global inversion
     print inversion
     return merge(left,right)
@@ -28,5 +28,5 @@ def merge(l,r):
         return [r[0]] + merge(l,r[1:])
 
 li= [3,1,4,2]
-print foo(li)
+print inv(li)
 print 'inv ', inversion

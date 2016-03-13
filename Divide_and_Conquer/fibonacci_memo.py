@@ -5,4 +5,5 @@ def fibMemo(n,d = None):
         d[n] = fibMemo(n-2, d) + fibMemo(n-1, d)
     return d[n]
 
-print fibMemo(100)
+if __name__ == "__main__":
+    print fib_memo(100)
