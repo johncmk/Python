@@ -1,43 +1,89 @@
+'''Topological sort in DFS'''
 
-color = {"CS10" : 0, "CS11": 0, "CS20" :0, "CS21" : 0, "CS12" : 0, "CS30":0}
+'''Global variables'''
+timer = 0
+no_topo = False
+ll = [] #LinkedList
 
-graph = {"CS10": ["CS11", "CS20"],
-         "CS11": ["CS21"],
-         "CS20": ["CS30"],
-         "CS21": ["CS12", "CS20"],
-         "CS12": ["CS30"],
-         "CS30": []
-         }
-
-in_degree ={"CS10" : 0, "CS11": 0, "CS20" :0, "CS21" :0, "CS12" : 0, "CS30":0}
-path = "CS10"
-
-def init_dfs():
-        global graph
-        for x in graph:
-                for y in graph[x]:
-                        in_degree[y]+=1 
+def init_dfs(graph, color, time_d, time_f):
+        for el in graph:
+                color[el] = "w"
+                time_d[el] = 0
+                time_f[el] = 0
 
 
 
-def dfs(head):
-	color[head] = 1
-	if head not in graph:
-		color[head] = 2
-		return 
-	for x in graph[head]:
-		in_degree[x]-=1
-		if color[x] == 0 and in_degree[x]==0:  
-			global path
-			path = path + " -> " + x
-			dfs(x)
-	
-	
-	color[head] = 2
-	return
+def dfs(graph, color, time_d, time_f, u):
+        global timer
+        global no_topo
+        global ll
+        if u not in graph:
+                color = "b"
+                return
 
+        color[u] = "g"
+        timer+=1
+        time_d[u] = timer
+
+        for v in graph[u]:
+                if color[v] == "w":
+                       print u," -> ",v
+                       dfs(graph, color, time_d, time_f, v)
+                elif color[v] == "g":
+                        print u," -> ",v,"[BACK]"
+                        no_topo = True
+                elif time_d[u] < time_d[v] and abs(time_d[u] - time_d[v]) > 1:
+                        print u," -> ",v,"[FORWARD]"
+                else:
+                        print u," -> ",v,"[CROSS]"
+
+        color[u] = "b"
+        timer+=1
+        time_f[u] = timer
+        ll.insert(0,u)
+        return
+
+def print_topo(time_f):
+    rev_f = {}
+    li = []
+
+    for el in time_f:
+        t = time_f[el]
+        rev_f[t] = el
+        li.append(t)
+
+    li = sorted(li)
+
+    for el in reversed(li):
+        k = el
+        print rev_f[k]," ",
+    
+            
 if __name__ == "__main__":
 
-        init_dfs()
-        dfs("CS10")
-        print path
+        graph = {
+                "CS10": ["CS20", "CS11"],
+                "CS11": ["CS21"],
+                "CS20": ["CS30"],
+                "CS21": ["CS20", "CS12"],
+                "CS12": ["CS30"],
+                "CS30": []
+                }
+        
+        color = {} # w:white, g:gray, b:black
+        time_d = {} #discover time
+        time_f = {} #finish time
+
+        init_dfs(graph, color, time_d, time_f)
+        dfs(graph, color, time_d, time_f, "CS10")
+
+        if no_topo == True:
+            print "NO TOPOLOGICAL ORDER"
+        else:   #2 way to print the topo order.
+            #1 print by reversed finish time
+            print_topo(time_f)
+            #2 simply output the linkedlist list
+            #print ll
+
+
+
