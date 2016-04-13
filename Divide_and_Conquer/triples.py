@@ -85,11 +85,14 @@ def triples(li):
             
 '''b) Solution; witout using hash table O(nlogn) + O(n) + O(n^2) = O(n^2)
     q is used to prevent duplcations of triples'''
+
+import sys
+
 def triples_li(li):
     if len(li) <= 3:
         return
     li = msort(li) #mergesort
-    q = [-1000000] #negative infinite
+    q = [-sys.maxint] #dummy negative infinite
     
     for i in range(len(li)-1,-1,-1):
         lm = 0 #leftmost
