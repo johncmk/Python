@@ -1,28 +1,27 @@
-'''BST'''
 class Tree():
+
     __slots__ = "root,left,right".split()
 
-    def __init__(self, root = None , left = None, right = None):
+    def __init__(self, root=None, left=None, right=None):
         self.root = root
         self.left = left
         self.right = right
 
 '''preorder'''
-def print_t(t, tab=1):
+def print_t(t,tab=1):
     if t is None:
         return
     l = t.left
     rt = t.root
     r = t.right
-    print '\t'*tab,rt
+    print '\t'*tab, rt
     print_t(l,tab+1)
     print_t(r,tab+1)
 
-'''inorder; to input empty list so you don't get persistance list
-    i.e. _sorted(t,[])'''
+'''inorder'''
 def _sorted(t,li):
     if t is None:
-        return
+        return li
     l = t.left
     rt = t.root
     r = t.right
@@ -30,10 +29,8 @@ def _sorted(t,li):
     li.append(rt)
     _sorted(r,li)
     return li
-    
-'''Search node logn; if node is found
-then return the node else return its parent'''
-def _search(t,x,parent = None):
+
+def _search(t,x,parent=None):
     if t is None:
         return parent
     l = t.left
@@ -41,89 +38,80 @@ def _search(t,x,parent = None):
     r = t.right
     if rt == x:
         return t
-    elif rt < x:
-        return _search(r,x,t)
-    return _search(l,x,t)
+    parent = t
+    if rt < x:
+        return _search(r,x,parent)
+    return _search(l,x,parent)
 
-'''return true if node exists else false'''
 def search(t,x):
     sub_t = _search(t,x)
-    root = sub_t.root
-    if root != x:
+    if sub_t.root != x:
         return False
     return True
 
-'''insert'''
 def insert(t,x):
     sub_t = _search(t,x)
-    root = sub_t.root
-    if root == x:
-        print x," already exists "
+    if sub_t.root == x:
+        print x, " already exists in BST"
         return
-    #else root is the parent of the spot
-    if root < x and sub_t.right is None:
+    #sub_t is the parent of the value x
+    if sub_t.root < x:
         sub_t.right = Tree(x)
     else:
         sub_t.left = Tree(x)
 
-
-''' ONLY used when delete tree which returns found tree and its parent'''
-def _search_parent(t,x,parent = None):
+#ONLY use for deletion; return parent, child
+def _search_parent(t,x,parent=None):
     if t is None:
         return None,None
     l = t.left
     rt = t.root
     r = t.right
-    if rt == x and parent is not None:
+    if rt == x and parent is None:
+        print x," is the root of the BST"
         return parent,t
-    if rt == x and parent == None:
-        print x, " is the root node of the tree, thus the parent is itself"
-        return None,t
+    if rt == x:
+        return parent,t
     parent = t
     if rt < x:
         return _search_parent(r,x,parent)
     return _search_parent(l,x,parent)
 
-'''4 cases; 1 no child; remove the entire spot
-            2 only left child; override parent's left subtree 
-            3 only right child; override parent's right subtree
-            4 both child exits; brings the parent'''
+def _delete(parent,sub_t,rt):
+    if parent.root < rt:
+        parent.right = sub_t
+    else:
+        parent.left = sub_t
+		
+'''4 cases: 1) both left and right child exist
+			2) ONLY right child exists
+			3) ONLY left child exists
+			4) both left and right child not exist'''
 def delete(t,x):
-
     parent,t = _search_parent(t,x)
-    
+
     if t is None and parent is None:
         print x," not exists in BST"
         return
 
     l = t.left
     rt = t.root
-    r = t.right    
+    r = t.right
 
-    #these can't be done witou parent node
-    if l is None and r is None: 
-        _delete(parent,rt,None)
-    elif l is not None and r is None:
-        _delete(parent,rt,l)
-    elif l is None and r is not None:
-        _delete(parent,rt,r)
-    else:
+    if l is not None and r is not None:
         key = min(_sorted(r,[]))
         delete(t,key)
         t.root = key
-        
-
-'''delete support'''
-def _delete(parent,rt,sub_t):
-    if parent.root < rt:
-        parent.right = sub_t
+    elif r is not None:
+        _delete(parent,r,rt)
+    elif l is not None:
+        _delete(parent,l,rt)
     else:
-        parent.left = sub_t
-
+        _delete(parent,None,rt)
     
+
 if __name__ == "__main__":
 
-    
     t = Tree(4,
                 Tree(2,
                      Tree(1),
@@ -134,7 +122,10 @@ if __name__ == "__main__":
                           Tree(9)
                           )))
 
-
+    insert(t,11)
+    insert(t,0)
+    insert(t,8)
+    print_t(t)
     
     print_t(t)
     insert(t,0)
@@ -146,6 +137,7 @@ if __name__ == "__main__":
 
     insert(t,15)
     print_t(t)
+    
     print _sorted(t,[])
     print "111 exists? ",search(t,111)
     
@@ -178,3 +170,4 @@ if __name__ == "__main__":
     delete(t,6)
     print_t(t)
     print _sorted(t,[])
+    
